@@ -18,7 +18,7 @@ pipeline {
 		stage('Dockerfile') {
 		    steps {
 						dir('') {
-						sh '\cp /var/lib/jenkins/workspace/CI_CD_pipeline/target/addressbook.war /home/chandan/'
+						sh 'cp /var/lib/jenkins/workspace/CI_CD_pipeline/target/addressbook.war /home/chandan/'
 						sh 'cd /home/chandan/'
 						sh 'docker build -f /home/chandan/dockerfile_addressbook . -t chandanbms/addressbook:latest'
 						}
