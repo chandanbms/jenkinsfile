@@ -7,6 +7,31 @@ pipeline {
 				}
 		}
 		
+			
+		stage('Compile') {
+		    steps {
+		        dir('') {
+		             sh '/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/myMaven/bin/mvn compile'
+		        }
+		    }
+		}
+		
+		stage('Review') {
+		    steps {
+		        dir('') {
+		             sh '/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/myMaven/bin/mvn -P metrics pmd:pmd'
+		        }
+		    }
+		}
+		
+		stage('Test') {
+		    steps {
+		        dir('') {
+		             sh '/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/myMaven/bin/mvn test'
+		        }
+		    }
+		}
+		
 		stage('Build') {
 		    steps {
 						dir('') {
@@ -17,9 +42,9 @@ pipeline {
 		
 		stage('Dockerfile') {
 		    steps {
-						{
-                                                sh 'rm -f /home/chandan/addressbook.war'
-						sh 'cp /var/lib/jenkins/workspace/CI_CD_pipeline/target/addressbook.war /home/chandan/'
+					       dir('')	{
+                        sh 'rm -f /var/lib/jenkins/workspace/CI_CD_pipeline/addressbook.war'
+						sh 'cp /var/lib/jenkins/workspace/CI_CD_pipeline/target/addressbook.war /var/lib/jenkins/workspace/CI_CD_pipeline'
 						sh 'cd /home/chandan/'
 						sh 'docker build -f /home/chandan/dockerfile_addressbook . -t chandanbms/addressbook:latest'
 						}
@@ -50,6 +75,13 @@ pipeline {
 					}
 		}
 		
+		stage('Deployment') {
+		    steps {
+						dir('') {
+						sh 'kubectl apply -f /root/manifest/deployment.yml'
+						}
+					}
+		}
 		
                 stage('Email') {
 			steps {
@@ -60,3 +92,4 @@ pipeline {
 		}
 		
 }
+
