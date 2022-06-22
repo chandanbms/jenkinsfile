@@ -7,7 +7,6 @@ pipeline {
 				}
 		}
 		
-			
 		stage('Compile') {
 		    steps {
 		        dir('') {
@@ -32,6 +31,7 @@ pipeline {
 		    }
 		}
 		
+		
 		stage('Build') {
 		    steps {
 						dir('') {
@@ -45,8 +45,7 @@ pipeline {
 					       dir('')	{
                         sh 'rm -f /var/lib/jenkins/workspace/CI_CD_pipeline/addressbook.war'
 						sh 'cp /var/lib/jenkins/workspace/CI_CD_pipeline/target/addressbook.war /var/lib/jenkins/workspace/CI_CD_pipeline'
-						sh 'cd /home/chandan/'
-						sh 'docker build -f /home/chandan/dockerfile_addressbook . -t chandanbms/addressbook:latest'
+						sh 'docker build -f /root/chandan/manifest/dockerfile_addr . -t chandanbms/addressbook:latest'
 						}
 					}
 		}
@@ -78,7 +77,7 @@ pipeline {
 		stage('Deployment') {
 		    steps {
 						dir('') {
-						sh 'kubectl apply -f /root/manifest/deployment.yml'
+						sh 'kubectl apply -f /root/chandan/manifest/deployment.yml'
 						}
 					}
 		}
